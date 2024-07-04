@@ -10,21 +10,12 @@ jobs:
     steps:
       - name: Checkout GitHub repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Clone Bitbucket repository
+      - name: Fetch Merge Push
         run: |
-          git clone https://bitbucket.org/odedevs/ode.git
-          cd ode
-          git remote add upstream https://bitbucket.org/odedevs/ode.git
-
-      - name: Fetch changes from Bitbucket
-        run: git fetch upstream
-
-      - name: Merge changes from Bitbucket
-        run: git merge upstream/master
-
-      - name: Commit and push changes
-        run: |
-          git add .
-          git commit -m "Sync from Bitbucket"
+          git remote add bitbucket https://bitbucket.org/odedevs/ode.git
+          git fetch bitbucket
+          git merge bitbucket/master -X theirs
           git push origin master
